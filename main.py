@@ -1,4 +1,6 @@
-import aux_funcs, sys, json, time, random
+import datetime
+
+import aux_funcs, time, random
 from LevPasha.InstagramAPI import InstagramAPI
 import os
 
@@ -9,17 +11,22 @@ api = InstagramAPI(os.getenv('user'), os.getenv('pass'))
 ### Delay in seconds ###
 min_delay = 5
 max_delay = 10
-MAXIMO = 50
+started_date = datetime.datetime.now().date()
 
 
-def printUsage():
-	print("Usage: \n+ python main.py -u USERNAME -p PASSWORD -o info: Show report")
-	print("+ python main.py -u USERNAME -p PASSWORD -o follow-tag -t TAG: Follow users using the tags you introduce")
-	print("+ python main.py -u USERNAME -p PASSWORD -o follow-location -t LOCATION_ID: Follow users from a location")
-	print("+ python main.py -u USERNAME -p PASSWORD -o follow-list -t USER_LIST: Follow users from a file")
-	print("+ python main.py -u USERNAME -p PASSWORD -o super-followback: Follow back all the users who you dont follow back")
-	print("+ python main.py -u USERNAME -p PASSWORD -o super-unfollow: Unfollow all the users who dont follow you back")
-	print("+ python main.py -u USERNAME -p PASSWORD -o unfollow-all: Unfollow all the users")
+def get_follows_by_day():
+	min = 50
+	max = 200
+	diff = datetime.datetime.now().date() - started_date
+	multiplo = 7
+	multiplicador = int(diff.days/multiplo)+1
+	per_day = min*multiplicador
+	if per_day > max:
+		per_day = max
+	return per_day
+
+MAXIMO = get_follows_by_day()
+print(f"Max of the day: {MAXIMO}")
 
 
 def info():
@@ -66,10 +73,9 @@ def get_followed():
 	return [int(x) for x in followed]
 
 
-def follow_tag(tag):
+def follow_tag(tag, tot):
 	api.tagFeed(tag)
 	media_id = api.LastJson
-	tot = 0
 	print("\nTAG: "+str(tag)+"\n")
 	for i in media_id["items"]:
 		time.sleep(float(random.uniform(min_delay*10,max_delay*10) / 10 ))
@@ -85,7 +91,7 @@ def follow_tag(tag):
 			print("Ja seguido.")
 		if tot >= MAXIMO:
 			break
-	print("Total: "+str(tot)+" for tag "+tag+" (Max val: "+str(MAXIMO)+")\n")
+	print("Total in day: "+str(tot)+" for tag "+tag+" (Max val: "+str(MAXIMO)+")\n")
 
 
 def follow_location(target):
@@ -118,15 +124,16 @@ def follow_list(target):
 	print("Total: "+str(tot)+" users followed from "+str(target)+" (Max val: "+str(MAXIMO)+")\n")
 
 
-def super_followback():
-	count = 0
+def super_followback(count):
 	for i in followers:
 		if i not in followings:
-			count+=1
 			time.sleep(float( random.uniform(min_delay*10,max_delay*10) / 10 ))
 			print(str(count)+") Following back "+i)
 			user_id = aux_funcs.get_id(i)
 			api.follow(user_id)
+			count+=1
+	return count
+
 
 
 def super_unfollow():
@@ -162,9 +169,20 @@ def main():
 	for i in api.getTotalSelfFollowings():
 		followings.append(i.get("username") )
 
-	target = "twitchbr"
-	follow_tag(target)
-	super_followback()
+	day_now = datetime.datetime.now().date()
+	is_finished_day = False
+	while True:
+		if not is_finished_day:
+			tot = 0
+			target = "twitchbr"
+			tot = super_followback(tot)
+			follow_tag(target, tot)
+			is_finished_day = True
+		else:
+			print("Waiting another day...")
+			if day_now != datetime.datetime.now().date():
+				is_finished_day = False
+
 
 
 if __name__ == "__main__":
