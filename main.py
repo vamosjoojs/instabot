@@ -76,6 +76,7 @@ def get_followed():
 
 
 def follow_tag(tag, tot):
+	api.getLocationFeed('Brazil')
 	api.tagFeed(tag)
 	media_id = api.LastJson
 	print("\nTAG: "+str(tag)+"\n")
