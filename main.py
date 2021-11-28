@@ -1,9 +1,10 @@
 import aux_funcs, sys, json, time, random
 from LevPasha.InstagramAPI import InstagramAPI
+import os
 
 followers = []
 followings = []
-api = InstagramAPI("", "")
+api = InstagramAPI(os.getenv('user'), os.getenv('pass'))
 
 ### Delay in seconds ###
 min_delay = 5
