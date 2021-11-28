@@ -165,13 +165,6 @@ def unfollowall():
 
 def main():
 	api.login()
-
-	for i in api.getTotalSelfFollowers():
-		followers.append(i.get("username") )
-
-	for i in api.getTotalSelfFollowings():
-		followings.append(i.get("username") )
-
 	day_now = datetime.datetime.now().date()
 	is_finished_day = False
 	while True:
