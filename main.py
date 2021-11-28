@@ -3,7 +3,7 @@ from LevPasha.InstagramAPI import InstagramAPI
 
 followers = []
 followings = []
-api = InstagramAPI("vamos_joojar", "adjrjoojs123")
+api = InstagramAPI("", "")
 
 ### Delay in seconds ###
 min_delay = 5
