@@ -8,6 +8,8 @@ followers = []
 followings = []
 api = InstagramAPI(os.getenv('user'), os.getenv('pass'))
 
+print(f"User: {os.getenv('user')}")
+
 ### Delay in seconds ###
 min_delay = 5
 max_delay = 10
@@ -127,7 +129,7 @@ def follow_list(target):
 def super_followback(count):
 	for i in followers:
 		if i not in followings:
-			time.sleep(float( random.uniform(min_delay*10,max_delay*10) / 10 ))
+			time.sleep(float(random.uniform(min_delay*10,max_delay*10) / 10))
 			print(str(count)+") Following back "+i)
 			user_id = aux_funcs.get_id(i)
 			api.follow(user_id)
