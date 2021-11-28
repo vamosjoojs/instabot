@@ -176,7 +176,7 @@ def main():
 	while True:
 		if not is_finished_day:
 			tot = 0
-			target = "twitchbr"
+			target = os.getenv('tag')
 			tot = super_followback(tot)
 			follow_tag(target, tot)
 			is_finished_day = True
