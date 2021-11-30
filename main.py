@@ -173,8 +173,8 @@ def main():
 			target = os.getenv('tag')
 			follow_tag(target, tot)
 			is_finished_day = True
-		else:
 			print("Waiting another day...")
+		else:
 			if day_now != datetime.datetime.now().date():
 				is_finished_day = False
 
