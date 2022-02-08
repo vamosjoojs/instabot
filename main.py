@@ -1,9 +1,8 @@
-import time, random
+import datetime
+
+import aux_funcs, time, random
 from LevPasha.InstagramAPI import InstagramAPI
 import os
-
-followers = []
-followings = []
 
 api = InstagramAPI(os.getenv('user'), os.getenv('pass'))
 
@@ -26,6 +25,23 @@ def get_followed():
 		followed = arq.readlines()
 
 	return [int(x) for x in followed]
+
+
+def super_unfollow():
+	count = 0
+
+	followers_data = api.getTotalSelfFollowers()
+	followings = api.getTotalSelfFollowings()
+
+	followers = [x['pk'] for x in followers_data]
+
+	for i in followings:
+		if i['pk'] not in followers:
+			count += 1
+			time.sleep(float( random.uniform(min_delay*10,max_delay*10) / 10 ))
+			print(str(count)+") Unfollowing "+i)
+			user_id = aux_funcs.get_id(i)
+			api.unfollow(user_id)
 
 
 def follow_tag(tag):
@@ -58,6 +74,10 @@ def follow_tag(tag):
 def main():
 	api.login()
 	target = os.getenv('tag')
+	if datetime.datetime.utcnow().day in [8, 14, 21, 30]:
+		print(f"LIMPEZA SEMANAL ... dia {datetime.datetime.utcnow().day}")
+		super_unfollow()
+
 	follow_tag(target)
 
 
