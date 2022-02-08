@@ -13,21 +13,10 @@ print(f"User: {os.getenv('user')}")
 ### Delay in seconds ###
 min_delay = 5
 max_delay = 10
-started_date = datetime.datetime.now().date()
 
+## The daily limit is 200 a day. 10 follows and unfollows per hour would keep your account safe and saves your account from being suspended.
 
-def get_follows_by_day():
-	min = 50
-	max = 200
-	diff = datetime.datetime.now().date() - started_date
-	multiplo = 7
-	multiplicador = int(diff.days/multiplo)+1
-	per_day = min*multiplicador
-	if per_day > max:
-		per_day = max
-	return per_day
-
-MAXIMO = get_follows_by_day()
+MAXIMO = 200
 print(f"Max of the day: {MAXIMO}")
 
 
@@ -81,7 +70,7 @@ def follow_tag(tag, tot):
 	media_id = api.LastJson
 	print("\nTAG: "+str(tag)+"\n")
 	for i in media_id["items"]:
-		time.sleep(float(random.uniform(min_delay*10,max_delay*10) / 10 ))
+		time.sleep(float(random.uniform(min_delay*10, max_delay*10) / 10))
 		username = i.get("user")["username"]
 		user_id = i.get("user")["pk"]
 		followed = get_followed()
@@ -138,7 +127,6 @@ def super_followback(count):
 	return count
 
 
-
 def super_unfollow():
 	whitelist = open("whitelist.txt").read().splitlines()
 	count = 0
@@ -165,19 +153,10 @@ def unfollowall():
 
 def main():
 	api.login()
-	day_now = datetime.datetime.now().date()
-	is_finished_day = False
 	while True:
-		if not is_finished_day:
-			tot = 0
-			target = os.getenv('tag')
-			follow_tag(target, tot)
-			is_finished_day = True
-			print("Waiting another day...")
-		else:
-			if day_now != datetime.datetime.now().date():
-				is_finished_day = False
-
+		tot = 0
+		target = os.getenv('tag')
+		follow_tag(target, tot)
 
 
 if __name__ == "__main__":
