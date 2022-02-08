@@ -73,9 +73,9 @@ def follow_tag(tag):
 def main():
 	api.login()
 	target = os.getenv('tag')
-	if datetime.datetime.utcnow().day in [8, 14, 21, 30]:
-		print(f"LIMPEZA SEMANAL ... dia {datetime.datetime.utcnow().day}")
-		super_unfollow()
+	# if datetime.datetime.utcnow().day in [8, 14, 21, 30]:
+	# 	print(f"LIMPEZA SEMANAL ... dia {datetime.datetime.utcnow().day}")
+	# 	super_unfollow()
 
 	follow_tag(target)
 
