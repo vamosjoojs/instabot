@@ -38,8 +38,7 @@ def super_unfollow():
 	for i in followings:
 		if i['pk'] not in followers:
 			count += 1
-			time.sleep(float( random.uniform(min_delay*10,max_delay*10) / 10 ))
-			print(str(count)+") Unfollowing "+i)
+			time.sleep(float( random.uniform(min_delay*10,max_delay*10) / 10))
 			user_id = aux_funcs.get_id(i)
 			api.unfollow(user_id)
 
