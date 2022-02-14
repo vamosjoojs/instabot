@@ -1,6 +1,6 @@
 import datetime
 
-import aux_funcs, time, random
+import time, random
 from LevPasha.InstagramAPI import InstagramAPI
 import os
 
@@ -12,6 +12,7 @@ min_delay = 5
 max_delay = 10
 
 MAXIMO = 200
+MAXIMO_unff = 150
 print(f"Max of the day: {MAXIMO}")
 
 
@@ -38,9 +39,15 @@ def super_unfollow():
 	for i in followings:
 		if i['pk'] not in followers:
 			count += 1
-			time.sleep(float( random.uniform(min_delay*10,max_delay*10) / 10))
-			user_id = aux_funcs.get_id(i['username'])
+			time.sleep(float(random.uniform(min_delay*10,max_delay*10) / 10))
+			user_id = i['pk']
 			api.unfollow(user_id)
+			if count / 20 in range(1, 11):
+				print('ja dei unfollow em 10, dorme 1 hora')
+				time.sleep(3600)
+				print("continuando")
+			if count >= MAXIMO_unff:
+				break
 
 
 def follow_tag(tag):
@@ -73,11 +80,11 @@ def follow_tag(tag):
 def main():
 	api.login()
 	target = os.getenv('tag')
-	# if datetime.datetime.utcnow().day in [8, 14, 21, 30]:
-	# 	print(f"LIMPEZA SEMANAL ... dia {datetime.datetime.utcnow().day}")
-	# 	super_unfollow()
-
-	follow_tag(target)
+	if datetime.datetime.utcnow().day in [8, 14, 21, 30]:
+		print(f"LIMPEZA SEMANAL ... dia {datetime.datetime.utcnow().day}")
+		super_unfollow()
+	else:
+		follow_tag(target)
 
 
 if __name__ == "__main__":
